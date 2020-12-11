@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {BrowserRouter as Router, Route, Switch, Redirect} from "react-router-dom";
 import 'react-app-polyfill/ie11';
 import 'react-app-polyfill/stable';
 
