@@ -1,0 +1,14 @@
+.table{
+    width: 990px;
+    margin: 2rem auto 0;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid lightgray;
+    border-radius: .5rem;
+}
+.table-spinner-wrap{
+    display: flex;
+    justify-content: center;
+    height: 300px;
+    align-items: center;
+}

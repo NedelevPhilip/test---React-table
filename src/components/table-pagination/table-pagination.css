@@ -1,0 +1,15 @@
+.table-pagination{
+    display: flex;
+}
+.table-pagination_items-wrap{
+    display: flex;
+}
+.table-pagination_item{
+    margin: 0 8px;
+    color: #212529;
+}
+.table-pagination_item__active{
+    color: mediumblue;
+    cursor: pointer;
+    margin: 0 8px;
+}

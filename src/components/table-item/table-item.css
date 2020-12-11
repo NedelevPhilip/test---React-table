@@ -1,0 +1,8 @@
+.table-item{
+    display: flex;
+    justify-content: space-around;
+    height: 30px;
+}
+.table-item_cell{
+    text-align: center;
+}
