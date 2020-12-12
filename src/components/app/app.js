@@ -8,6 +8,7 @@ import TableFooter from "../table-footer";
 import TableItem from "../table-item";
 import TablePagination from "../table-pagination";
 import RingLoader from "react-spinners/RingLoader";
+import TableItemExpander from "../table-item-expander";
 
 import './app.css';
 
@@ -71,41 +72,8 @@ class App extends Component {
         this.downloadUsers();
     }
 
-    /*<img src="https://picsum.photos/id/1/200/200"/>*/
-
     render() {
         const {isLoading, users, columns, pagination, sort} = this.state;
-
-        let content;
-        if (isLoading) {
-            content = <div className="table-spinner-wrap">
-                <RingLoader size={80} color={"#123abc"}/>
-            </div>
-        } else {
-            content = [];
-
-            let sortedUsers = [...users];
-            let sortedField = sort.name;
-
-            if (sortedField !== null) {
-                sortedUsers.sort((a, b) => {
-                    if (a[sortedField] < b[sortedField]) {
-                        return sort.direction === 'ascending' ? -1 : 1;
-                    }
-                    if (a[sortedField] > b[sortedField]) {
-                        return sort.direction === 'ascending' ? 1 : -1;
-                    }
-                    return 0;
-                });
-            }
-
-            sortedUsers.map((item) => {
-                content.push(<TableItem
-                    key={item.id}
-                    columns={columns}
-                    user={item}/>);
-            })
-        }
 
         const handleChangeTableRowAmount = (event) => {
             let newState = {
@@ -146,13 +114,11 @@ class App extends Component {
         };
 
         const handleVisible = (event) => {
-            const columns = this.state.columns;
             const newColumnIndex = columns.findIndex(({name}) => name === event.target.value);
             let newColumn = {
                 ...columns[newColumnIndex],
                 visible: !columns[newColumnIndex].visible
             };
-
             let newState = {
                 ...this.state,
                 columns:[
@@ -163,6 +129,58 @@ class App extends Component {
             };
             this.setState(newState);
         };
+
+        const handleExpand = (userId) => {
+            const newUserIndex = users.findIndex(({id}) => id === userId);
+            let newUser = {
+                ...users[newUserIndex],
+                expanded: !users[newUserIndex].expanded
+            };
+            let newState = {
+                ...this.state,
+                users:[
+                    ...this.state.users.slice(0, newUserIndex),
+                    newUser,
+                    ...this.state.users.slice(newUserIndex + 1)
+                ]
+            };
+            this.setState(newState);
+        };
+
+
+
+
+        let content;
+        if (isLoading) {
+            content = <div className="table-spinner-wrap">
+                <RingLoader size={80} color={"mediumblue"}/>
+            </div>
+        } else {
+            content = [];
+            let sortedUsers = [...users];
+            let sortedField = sort.name;
+
+            if (sortedField !== null) {
+                sortedUsers.sort((a, b) => {
+                    if (a[sortedField] < b[sortedField]) {
+                        return sort.direction === 'ascending' ? -1 : 1;
+                    }
+                    if (a[sortedField] > b[sortedField]) {
+                        return sort.direction === 'ascending' ? 1 : -1;
+                    }
+                    return 0;
+                });
+            }
+
+            sortedUsers.map((item) => {
+                content.push(<TableItem
+                    key={item.id}
+                    columns={columns}
+                    user={item}
+                    onExpand={handleExpand}
+                    expander={item.expanded ? <TableItemExpander user={item}/> : null}/>);
+            })
+        }
 
         return (
             <div className='app'>

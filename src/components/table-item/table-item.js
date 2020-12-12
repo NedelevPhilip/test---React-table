@@ -6,9 +6,9 @@ export default class TableItem extends Component {
 
 
     render() {
-        const {user, columns} = this.props;
+        const {user, columns, expander, onExpand} = this.props;
 
-        const columnsElems = columns.map((item, index) => {
+        const columnsElements = columns.map((item, index) => {
             if (item.visible) {
                 return <div key={index}
                             style={{width: item.width}}
@@ -19,8 +19,11 @@ export default class TableItem extends Component {
         });
 
         return (
-            <div className="table-item">
-                {columnsElems}
+            <div className="table-item"  onClick={(e) => onExpand(user.id, e)}>
+                <div className="table-item_data-wrap">
+                    {columnsElements}
+                </div>
+                {expander}
             </div>
         )
     }

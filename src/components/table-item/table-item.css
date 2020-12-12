@@ -1,7 +1,13 @@
 .table-item{
+    border-bottom: 1px solid lightgray;
+    padding: 10px;
+    cursor: pointer;
+}
+.table-item_data-wrap{
     display: flex;
     justify-content: space-around;
-    height: 30px;
+    align-items: center;
+    height: 40px;
 }
 .table-item_cell{
     text-align: center;
