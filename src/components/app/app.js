@@ -72,83 +72,82 @@ class App extends Component {
         this.downloadUsers();
     }
 
+    handleChangeTableRowAmount = (event) => {
+        let newState = {
+            ...this.state, pagination:
+                {
+                    ...this.state.pagination,
+                    tableSize: parseInt(event.target.value, 10)
+                }
+        };
+        this.setState(newState, () => {
+            this.downloadUsers();
+        });
+    };
+
+    handleChangePage = (page) => {
+        let newState = {
+            ...this.state, pagination:
+                {
+                    ...this.state.pagination,
+                    page: page
+                }
+        };
+        this.setState(newState, () => {
+            this.downloadUsers();
+        });
+    };
+
+    handleSort = (column) => {
+        let newState = {
+            ...this.state, sort:
+                {
+                    ...this.state.sort,
+                    name: column,
+                    direction: this.state.sort.direction === "ascending" ? "descending" : "ascending"
+                }
+        };
+        this.setState(newState);
+    };
+
+    handleVisible = (event) => {
+        const columns = this.state.columns;
+        const newColumnIndex = columns.findIndex(({name}) => name === event.target.value);
+        let newColumn = {
+            ...columns[newColumnIndex],
+            visible: !columns[newColumnIndex].visible
+        };
+        let newState = {
+            ...this.state,
+            columns:[
+                ...this.state.columns.slice(0, newColumnIndex),
+                newColumn,
+                ...this.state.columns.slice(newColumnIndex + 1)
+            ]
+        };
+        this.setState(newState);
+    };
+
+    handleExpand = (userId) => {
+        const users = this.state.users;
+        const newUserIndex = users.findIndex(({id}) => id === userId);
+        let newUser = {
+            ...users[newUserIndex],
+            expanded: !users[newUserIndex].expanded
+        };
+        let newState = {
+            ...this.state,
+            users:[
+                ...this.state.users.slice(0, newUserIndex),
+                newUser,
+                ...this.state.users.slice(newUserIndex + 1)
+            ]
+        };
+        this.setState(newState);
+    };
+
     render() {
         const {isLoading, users, columns, pagination, sort} = this.state;
-
-        const handleChangeTableRowAmount = (event) => {
-            let newState = {
-                ...this.state, pagination:
-                    {
-                        ...this.state.pagination,
-                        tableSize: parseInt(event.target.value, 10)
-                    }
-            };
-            this.setState(newState, () => {
-                this.downloadUsers();
-            });
-        };
-
-        const handleChangePage = (page) => {
-            let newState = {
-                ...this.state, pagination:
-                    {
-                        ...this.state.pagination,
-                        page: page
-                    }
-            };
-            this.setState(newState, () => {
-                this.downloadUsers();
-            });
-        };
-
-        const handleSort = (column) => {
-            let newState = {
-                ...this.state, sort:
-                    {
-                        ...this.state.sort,
-                        name: column,
-                        direction: this.state.sort.direction === "ascending" ? "descending" : "ascending"
-                    }
-            };
-            this.setState(newState);
-        };
-
-        const handleVisible = (event) => {
-            const newColumnIndex = columns.findIndex(({name}) => name === event.target.value);
-            let newColumn = {
-                ...columns[newColumnIndex],
-                visible: !columns[newColumnIndex].visible
-            };
-            let newState = {
-                ...this.state,
-                columns:[
-                    ...this.state.columns.slice(0, newColumnIndex),
-                    newColumn,
-                    ...this.state.columns.slice(newColumnIndex + 1)
-                ]
-            };
-            this.setState(newState);
-        };
-
-        const handleExpand = (userId) => {
-            const newUserIndex = users.findIndex(({id}) => id === userId);
-            let newUser = {
-                ...users[newUserIndex],
-                expanded: !users[newUserIndex].expanded
-            };
-            let newState = {
-                ...this.state,
-                users:[
-                    ...this.state.users.slice(0, newUserIndex),
-                    newUser,
-                    ...this.state.users.slice(newUserIndex + 1)
-                ]
-            };
-            this.setState(newState);
-        };
-
-
-
 
         let content;
         if (isLoading) {
@@ -177,7 +176,7 @@ class App extends Component {
                     key={item.id}
                     columns={columns}
                     user={item}
-                    onExpand={handleExpand}
+                    onExpand={this.handleExpand}
                     expander={item.expanded ? <TableItemExpander user={item}/> : null}/>);
             })
         }
@@ -186,8 +185,8 @@ class App extends Component {
             <div className='app'>
                 <Table>
                     <TableHeader
-                        onSort={handleSort}
-                        onVisible={handleVisible}
+                        onSort={this.handleSort}
+                        onVisible={this.handleVisible}
                         columns={columns}
                     />
                     <TableBody>
@@ -197,8 +196,8 @@ class App extends Component {
                         <TablePagination
                             rowsAmount={[10, 20, 30]}
                             pagination={pagination}
-                            onChangePage={handleChangePage}
-                            onChangeRowsPerPage={handleChangeTableRowAmount}
+                            onChangePage={this.handleChangePage}
+                            onChangeRowsPerPage={this.handleChangeTableRowAmount}
                         />
                     </TableFooter>
                 </Table>
